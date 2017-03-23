@@ -1,6 +1,7 @@
 import './Panel.css';
+import { Translations } from './lib/Translations/src/Translations.js';
 
-const T = window.Catalog.Translations;
+const T = window.Catalog.Translations || new Translations();
 
 T.addText ('rus', {'minimize': 'Свернуть'});
 T.addText ('eng', {'minimize': 'Minimize'});
