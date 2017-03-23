@@ -1,0 +1,3 @@
+[submodule "src/lib/Translations"]
+	path = src/lib/Translations
+	url = https://github.com/Scanex/Translations
