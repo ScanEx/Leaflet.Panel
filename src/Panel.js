@@ -4,6 +4,8 @@ import { Translations } from './lib/Translations/src/Translations.js';
 window.Catalog = window.Catalog || {};
 window.Catalog.Translations = window.Catalog.Translations || new Translations();
 
+const T = window.Catalog.Translations;
+
 T.addText ('rus', {'minimize': 'Свернуть'});
 T.addText ('eng', {'minimize': 'Minimize'});
 
