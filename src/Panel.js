@@ -1,6 +1,6 @@
 import './Panel.css';
 
-const T = window.nsGmx.Translations;
+const T = window.Catalog.Translations;
 
 T.addText ('rus', {'minimize': 'Свернуть'});
 T.addText ('eng', {'minimize': 'Minimize'});
