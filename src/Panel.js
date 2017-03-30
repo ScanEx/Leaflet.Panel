@@ -6,11 +6,16 @@ window.Catalog.Translations = window.Catalog.Translations || new Translations();
 
 const T = window.Catalog.Translations;
 
-T.addText ('rus', {'minimize': 'Свернуть'});
-T.addText ('eng', {'minimize': 'Minimize'});
-
-T.addText ('rus', {'maximize': 'Показать'});
-T.addText ('eng', {'maximize': 'Maximize'});
+T.addText ('rus', {
+    minimize: 'Свернуть',
+    maximize: 'Показать',
+    close: 'Закрыть',
+});
+T.addText ('eng', {
+    minimize: 'Minimize',
+    maximize: 'Maximize',
+    close: 'Close',
+});
 
 class Panel {
     constructor(container, {
