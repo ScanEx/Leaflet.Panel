@@ -1,5 +1,6 @@
 import './Panel.css';
 import { Translations } from './lib/Translations/src/Translations.js';
+import { EventTarget } from './lib/EventTarget/src/EventTarget.js';
 
 window.Catalog = window.Catalog || {};
 window.Catalog.Translations = window.Catalog.Translations || new Translations();
@@ -17,9 +18,10 @@ T.addText ('eng', {
     close: 'Close',
 });
 
-class Panel {
-    constructor(container, {
+class Panel extends EventTarget {
+    constructor(container, {        
         title = '', id = '', closable = true, left = 100, top = 100, modal = false}) {
+        super();
         this._id = id;
         this._container = container;
         this._modal = modal;
@@ -92,18 +94,14 @@ class Panel {
             this._ovl.style.display = 'block';
         }
         this._body.style.visibility = 'visible';
-        if (typeof this._onShow === 'function') {
-            this._onShow();
-        }
+        this.dispatchEvent(new Event('show'));        
     }
     hide() {
         if(this._modal) {
             this._ovl.style.display = 'none';
         }
         this._body.style.visibility = 'hidden';
-        if (typeof this._onHide === 'function') {
-            this._onHide();
-        }
+        this.dispatchEvent(new Event('hide'));
     }
     toggle() {     
         let btn = this._toggleButton.querySelector('i');
