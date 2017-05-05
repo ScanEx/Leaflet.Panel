@@ -29,7 +29,7 @@ class Panel extends EventTarget {
         this._container.classList.add ('panel-container');        
         const useClose = closable ? 
             `<td class="panel-close-button" title="${T.getText('close')}">
-                <i class="fa fa-times-circle" />
+                <i class="panel-icon-close" />
             </td>` : '';            
         this._container.innerHTML = 
             `<div class="panel-body">
@@ -37,7 +37,7 @@ class Panel extends EventTarget {
                         <tr>
                             <td class="panel-header-title">${title}</td>
                             <td class="panel-toggle-button" title="${T.getText('minimize')}">
-                                <i class="fa fa-minus-circle" />
+                                <i class="panel-icon-minimize" />
                             </td>
                             ${useClose}
                         </tr>
