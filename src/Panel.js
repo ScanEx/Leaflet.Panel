@@ -1,11 +1,6 @@
 import './Panel.css';
-import { Translations } from './lib/Translations/src/Translations.js';
+import { translations as T } from 'lib/Translations/src/Translations.js';
 import { EventTarget } from './lib/EventTarget/src/EventTarget.js';
-
-window.Catalog = window.Catalog || {};
-window.Catalog.Translations = window.Catalog.Translations || new Translations();
-
-const T = window.Catalog.Translations;
 
 T.addText ('rus', {
     minimize: 'Свернуть',
@@ -26,7 +21,7 @@ class Panel extends EventTarget {
         this._container = container;
         this._modal = modal;
         this._container.classList.add ('noselect');        
-        this._container.classList.add ('panel-container');        
+        this._container.classList.add ('panel-container');          
         const useClose = closable ? 
             `<td class="panel-close-button" title="${T.getText('close')}">
                 <i class="panel-icon-close" />
@@ -53,6 +48,7 @@ class Panel extends EventTarget {
         this.toggle = this.toggle.bind(this);
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
+        
         this._toggleButton = this._container.querySelector('.panel-toggle-button');
         this._toggleButton.addEventListener('click', this.toggle);
 
@@ -61,12 +57,15 @@ class Panel extends EventTarget {
             this._closeButton.addEventListener('click', this.hide);
         }        
         this._savePosition = this._savePosition.bind(this);
-        this._draggable = new L.Draggable (this._container);
-        this._draggable.addEventListener('dragend', this._savePosition);
-        this._draggable.enable();        
-
+   
         this._stopPropagation = this._stopPropagation.bind(this);
-
+        this._startMove = this._startMove.bind(this);
+        this._stopMove = this._stopMove.bind(this);
+        this._handleMove = this._handleMove.bind(this);
+        this._container.addEventListener('dragstart', this.preventDefault);
+        this._header.addEventListener('mousedown', this._startMove);
+        document.body.addEventListener('mouseup', this._stopMove);
+        this._header.addEventListener('mousemove', this._handleMove);
         this._container.addEventListener('mousewheel', this._stopPropagation);
         this._restorePosition(top, left);
         if(this._modal) {
@@ -85,6 +84,19 @@ class Panel extends EventTarget {
         else {
             this._container.classList.add('panel-non-modal');
         }
+    }    
+    _startMove (e) {        
+        const {left, top} = this._container.getBoundingClientRect();
+        this._offset = {x: e.clientX - left, y: e.clientY - top};
+    }
+    _stopMove (e) {
+        this._offset = null;        
+    }
+    _handleMove (e) {
+        if (this._offset) {
+            this._container.style.left = `${e.clientX - this._offset.x}px`;
+            this._container.style.top = `${e.clientY - this._offset.y}px`;
+        }
     }
     _stopPropagation (e) {
         e.stopPropagation();
@@ -92,16 +104,14 @@ class Panel extends EventTarget {
     show() {
         if(this._modal) {
             this._ovl.style.display = 'block';
-        }
-        this._body.style.visibility = 'visible';
-        this.dispatchEvent(new Event('show'));        
+        }        
+        this._body.style.visibility = 'visible';             
     }
     hide() {
         if(this._modal) {
             this._ovl.style.display = 'none';
         }
         this._body.style.visibility = 'hidden';
-        this.dispatchEvent(new Event('hide'));
     }
     toggle() {     
         let btn = this._toggleButton.querySelector('i');
@@ -123,17 +133,18 @@ class Panel extends EventTarget {
         return this._title.innerText = text;
     }    
     _restorePosition(top, left) {
-        if (typeof this._id === 'string' && this._id != '') {            
-            L.DomUtil.setPosition(this._container,
-                L.point(localStorage.getItem(`${this._id}.left`) || left, localStorage.getItem(`${this._id}.top`) || top)
-            );            
+        if (typeof this._id === 'string' && this._id != '') {
+            const x = localStorage.getItem(`${this._id}.left`) || left;
+            const y = localStorage.getItem(`${this._id}.top`) || top;
+            this._container.style.left = `${x}px`;
+            this._container.style.top = `${y}px`;            
         }
     }
     _savePosition () {
         if (typeof this._id === 'string' && this._id != '') {            
-            const p = L.DomUtil.getPosition(this._container);
-            localStorage.setItem(`${this._id}.top`, p.y);
-            localStorage.setItem(`${this._id}.left`, p.x);
+            const p = this._container.getBoundingClientRect();
+            localStorage.setItem(`${this._id}.top`, p.top);
+            localStorage.setItem(`${this._id}.left`, p.left);
         }
     }
 }
