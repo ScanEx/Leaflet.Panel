@@ -84,7 +84,19 @@ class Panel extends EventTarget {
         else {
             this._container.classList.add('panel-non-modal');
         }
-    }    
+    } 
+    get header () {
+        return this._header;
+    }   
+    get body () {
+        return this._body;
+    }
+    get footer () {
+        return this._footer;
+    }
+    get content () {
+        return this._content;
+    }
     _startMove (e) {        
         const {left, top} = this._container.getBoundingClientRect();
         this._offset = {x: e.clientX - left, y: e.clientY - top};
@@ -105,13 +117,15 @@ class Panel extends EventTarget {
         if(this._modal) {
             this._ovl.style.display = 'block';
         }        
-        this._body.style.visibility = 'visible';             
+        this._body.style.visibility = 'visible';
+        this.dispatchEvent(new Event('show'));
     }
     hide() {
         if(this._modal) {
             this._ovl.style.display = 'none';
         }
         this._body.style.visibility = 'hidden';
+        this.dispatchEvent(new Event('hide'));
     }
     toggle() {     
         let btn = this._toggleButton.querySelector('i');
