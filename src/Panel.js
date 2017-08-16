@@ -15,7 +15,7 @@ T.addText ('eng', {
 
 class Panel extends EventTarget {
     constructor(container, {        
-        title = '', id = '', closable = true, left = 100, top = 100, modal = false}) {
+        title = '', id = '', closable = true, left = 100, top = 100, modal = false, header = true}) {
         super();
         this._id = id;
         this._container = container;
@@ -28,7 +28,8 @@ class Panel extends EventTarget {
             </td>` : '';            
         this._container.innerHTML = 
             `<div class="panel-body">
-                <table class="panel-header">
+                ${header ?
+                    `<table class="panel-header">
                         <tr>
                             <td class="panel-header-title">${title}</td>
                             <td class="panel-toggle-button" title="${T.getText('minimize')}">
@@ -36,23 +37,27 @@ class Panel extends EventTarget {
                             </td>
                             ${useClose}
                         </tr>
-                </table>
+                    </table>` : 
+                    ''
+                }
                 <div class="panel-content"></div>
                 <div class="panel-footer"></div>
             </div>`;
-        this._body = this._container.querySelector('.panel-body');
-        this._header = this._container.querySelector('.panel-header');
-        this._title = this._container.querySelector('.panel-header-title');
+        this._body = this._container.querySelector('.panel-body');        
         this._content = this._container.querySelector('.panel-content');
-        this._footer = this._container.querySelector('.panel-footer');
-        this.toggle = this.toggle.bind(this);
+        this._footer = this._container.querySelector('.panel-footer');        
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
         
-        this._toggleButton = this._container.querySelector('.panel-toggle-button');
-        this._toggleButton.addEventListener('click', this.toggle);
-
-        if (closable) {
+        if (header) {
+            this._header = this._container.querySelector('.panel-header');
+            this._title = this._container.querySelector('.panel-header-title');
+            this.toggle = this.toggle.bind(this);
+            this._toggleButton = this._container.querySelector('.panel-toggle-button');
+            this._toggleButton.addEventListener('click', this.toggle);
+        }
+        
+        if (header && closable) {
             this._closeButton = this._container.querySelector('.panel-close-button');
             this._closeButton.addEventListener('click', this.hide);
         }        
