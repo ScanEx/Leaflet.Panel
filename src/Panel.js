@@ -14,8 +14,8 @@ T.addText ('eng', {
 });
 
 class Panel extends EventTarget {
-    constructor(container, {        
-        title = '', id = '', closable = true, left = 100, top = 100, modal = false, header = true}) {
+    constructor(container, {                
+        title = '', id = '', closable = true, left = 100, top = 100, modal = false, header = true}) {        
         super();
         this._id = id;
         this._container = container;
@@ -122,15 +122,19 @@ class Panel extends EventTarget {
         if(this._modal) {
             this._ovl.style.display = 'block';
         }        
-        this._body.style.visibility = 'visible';
-        this.dispatchEvent(new Event('show'));
+        this._body.style.visibility = 'visible';        
+        let event = document.createEvent('Event');
+        event.initEvent('show', false, false);
+        this.dispatchEvent(event);
     }
     hide() {
         if(this._modal) {
             this._ovl.style.display = 'none';
         }
         this._body.style.visibility = 'hidden';
-        this.dispatchEvent(new Event('hide'));
+        let event = document.createEvent('Event');
+        event.initEvent('hide', false, false);
+        this.dispatchEvent(event);
     }
     toggle() {     
         let btn = this._toggleButton.querySelector('i');
