@@ -68,9 +68,11 @@ class Panel extends EventTarget {
         this._stopMove = this._stopMove.bind(this);
         this._handleMove = this._handleMove.bind(this);
         this._container.addEventListener('dragstart', this.preventDefault);
-        this._header.addEventListener('mousedown', this._startMove);
-        document.body.addEventListener('mouseup', this._stopMove);
-        this._header.addEventListener('mousemove', this._handleMove);
+        if (header) {
+            this._header.addEventListener('mousedown', this._startMove);
+            this._header.addEventListener('mousemove', this._handleMove);
+        }        
+        document.body.addEventListener('mouseup', this._stopMove);        
         this._container.addEventListener('mousewheel', this._stopPropagation);
         this._restorePosition(top, left);
         if(this._modal) {
