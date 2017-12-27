@@ -1,6 +1,9 @@
 import './Panel.css';
-import { translations as T } from 'lib/Translations/src/Translations.js';
+import { Translations } from 'lib/Translations/src/Translations.js';
 import { EventTarget } from './lib/EventTarget/src/EventTarget.js';
+
+window.Catalog.translations = window.Catalog.translations || new Translations();
+let T = window.Catalog.translations
 
 T.addText ('rus', {
     minimize: 'Свернуть',
